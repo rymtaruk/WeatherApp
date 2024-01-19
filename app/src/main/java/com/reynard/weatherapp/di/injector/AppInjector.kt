@@ -41,7 +41,8 @@ class AppInjector(applicationContext: Application) : HasAndroidInjector, CoreCom
         private var instance: AppInjector? = null
         private fun initialize(applicationContext: Application) {
             AppCoreConstant.context = applicationContext
-            AppCoreConstant.baseUrl = ""
+            AppCoreConstant.baseUrl = "https://api.openweathermap.org"
+            AppCoreConstant.appid = "b72124bc9fc23e81d93bda14d32d7619"
             instance = AppInjector(applicationContext)
         }
 

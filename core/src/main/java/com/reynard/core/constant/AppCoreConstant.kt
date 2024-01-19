@@ -8,5 +8,6 @@ class AppCoreConstant {
         @SuppressLint("StaticFieldLeak")
         var context: Context? = null
         var baseUrl: String? = null
+        var appid: String? = null
     }
 }

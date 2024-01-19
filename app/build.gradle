@@ -11,11 +11,16 @@ android {
     defaultConfig {
         applicationId "com.reynard.weatherapp"
         minSdk 24
+        //noinspection OldTargetApi
         targetSdk 33
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        viewBinding true
     }
 
     buildTypes {
@@ -35,9 +40,12 @@ android {
 
 dependencies {
     //Base - Begin
+    //noinspection GradleDependency
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
+    //noinspection GradleDependency
     implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     //Base - End
 
     //Android Test - Begin
