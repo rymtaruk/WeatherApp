@@ -1,13 +1,9 @@
 package com.reynard.weatherapp.ui.home
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.Icon
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.reynard.weatherapp.R
 import com.reynard.weatherapp.databinding.ItemWeatherBinding
 import com.reynard.weatherapp.model.data.FourCastData
 import com.reynard.weatherapp.utils.IconUtil
@@ -15,11 +11,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-/**
- * Created by Reynard on January, 20 2024
- **
- * @author BCA Digital
- **/
 class HomeWeatherAdapter : RecyclerView.Adapter<HomeWeatherAdapter.ViewHolder>() {
     var items: List<FourCastData?>? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

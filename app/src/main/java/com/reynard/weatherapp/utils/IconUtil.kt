@@ -5,11 +5,6 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import com.reynard.weatherapp.R
 
-/**
- * Created by Reynard on January, 20 2024
- **
- * @author BCA Digital
- **/
 object IconUtil {
 
     @SuppressLint("UseCompatLoadingForDrawables")
