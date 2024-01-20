@@ -8,7 +8,7 @@ import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 
-class FavoriteRepositoryImpl @Inject constructor(private val applicationContext: Application): IFavoriteRepository{
+class FavoriteRepositoryImpl @Inject constructor(applicationContext: Application): IFavoriteRepository{
     private var _databaseManager: DatabaseManager? = null
 
     private val databaseManager get() = _databaseManager!!
@@ -21,8 +21,8 @@ class FavoriteRepositoryImpl @Inject constructor(private val applicationContext:
         return databaseManager.favoriteDao().findDataById(id)
     }
 
-    override fun findDataByLatAndLon(latitude: Double, longitude: Double): Single<FavoriteData> {
-        return databaseManager.favoriteDao().findDataByLatAndLon(latitude, longitude)
+    override fun findDataByName(name: String): Single<FavoriteData> {
+        return databaseManager.favoriteDao().findDataByName(name)
     }
 
     override fun getAllData(): Single<List<FavoriteData>> {

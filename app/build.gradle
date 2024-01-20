@@ -46,6 +46,7 @@ dependencies {
     //noinspection GradleDependency
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
     //Base - End
 
     //Android Test - Begin
@@ -85,6 +86,10 @@ dependencies {
     kapt "android.arch.persistence.room:compiler:1.1.1"
     implementation "androidx.room:room-rxjava3:2.5.2"
     //Room Lib - End
+
+    //Swipe To Refresh - Begin
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    //Swipe To Refresh - End
 
     //Chuck - Begin
     implementation 'com.github.chuckerteam.chucker:library:3.5.2'

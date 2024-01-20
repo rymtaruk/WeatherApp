@@ -10,7 +10,7 @@ import io.reactivex.rxjava3.core.Single
  **/
 interface IFavoriteRepository {
     fun findDataById(id: Int): Single<FavoriteData>
-    fun findDataByLatAndLon(latitude: Double, longitude: Double): Single<FavoriteData>
+    fun findDataByName(name: String): Single<FavoriteData>
     fun getAllData(): Single<List<FavoriteData>>
     fun save(favoriteData: FavoriteData)
 }

@@ -6,10 +6,13 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "favorite_data")
-data class FavoriteData (
+data class FavoriteData(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     var id: Int = 0,
+    @SerializedName("name")
+    @ColumnInfo(name = "name")
+    var name: String = "named",
     @SerializedName("latitude")
     @ColumnInfo(name = "latitude")
     var latitude: Double = 0.0,

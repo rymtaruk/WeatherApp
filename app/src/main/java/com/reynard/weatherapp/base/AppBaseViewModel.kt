@@ -12,6 +12,9 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import retrofit2.HttpException
 import java.net.ConnectException
 import java.net.UnknownHostException
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 abstract class AppBaseViewModel : ViewModel() {
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
@@ -22,6 +25,14 @@ abstract class AppBaseViewModel : ViewModel() {
     val loading: LiveData<Boolean> get() = _loading
     val defaultError: LiveData<String> get() = _defaultError
     val defaultUnauthorized: LiveData<String> get() = _defaultUnauthorized
+
+    val currentDate: String
+        get() {
+            val convertDate = Calendar.getInstance().time
+
+            val dateFormat = SimpleDateFormat("E, dd MMM yyyy", Locale.getDefault())
+            return dateFormat.format(convertDate)
+        }
 
     protected fun addDispose(disposable: Disposable) {
         compositeDisposable.add(disposable)

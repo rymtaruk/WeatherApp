@@ -30,6 +30,7 @@ class FavoriteViewModel @Inject constructor(
     private fun getAllFavoriteData() {
         addDispose(
             setRepository(iFavoriteRepository.getAllData())
+                .compose(this::showLoading)
                 .subscribe(this::getCurrentData) {
                     this.errorHandler(e = it)
                 }
@@ -49,7 +50,8 @@ class FavoriteViewModel @Inject constructor(
                     latitude = latitude,
                     longitude = longitude
                 )
-            ).subscribe(this::addToListFavorite) {
+            ).compose(this::showLoading)
+                .subscribe(this::addToListFavorite) {
                 this.errorHandler(e = it)
             }
         )

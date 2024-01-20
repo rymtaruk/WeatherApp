@@ -10,7 +10,6 @@ import com.reynard.weatherapp.model.data.FourCastData
 import com.reynard.weatherapp.model.response.CurrentWeatherResponse
 import com.reynard.weatherapp.model.response.WeatherResponse
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
@@ -38,20 +37,12 @@ class HomeViewModel @Inject constructor(
     val favoriteData: LiveData<List<FavoriteData>> get() = _favoriteData
     val hasAddedFavorite: LiveData<Boolean> get() = _hasAddedFavorite
 
+    var selectedLatitude: Double = 0.0
+    var selectedLongitude: Double = 0.0
 
-    val currentDate: String
-        get() {
-            val convertDate = Calendar.getInstance().time
-
-            val dateFormat = SimpleDateFormat("E, dd MMM yyyy", Locale.getDefault())
-            return dateFormat.format(convertDate)
-        }
-
-    init {
-        getWeatherByLocation(longitude = 106.8451, latitude = -6.2146)
-    }
-
-    fun getWeatherByLocation(latitude: Double, longitude: Double) {
+    fun getWeatherByLocation(latitude: Double = selectedLatitude, longitude: Double = selectedLongitude) {
+        selectedLatitude = latitude
+        selectedLongitude = longitude
         addDispose(
             setRepository(
                 weatherRepository.getWeatherByGeoLocation(longitude = longitude, latitude = latitude)
@@ -84,9 +75,11 @@ class HomeViewModel @Inject constructor(
                 }
                 .subscribe({
                     val result = it
+                    selectedLatitude = result?.city?.coord?.lat ?: 0.0
+                    selectedLongitude = result?.city?.coord?.lon ?: 0.0
                     this.getCurrentWeather(
-                        latitude = result?.city?.coord?.lat ?: 0.0,
-                        longitude = result?.city?.coord?.lon ?: 0.0
+                        latitude = selectedLatitude,
+                        longitude = selectedLongitude
                     )
                     this.mapDataByDate(it)
 
@@ -106,9 +99,8 @@ class HomeViewModel @Inject constructor(
                 )
             ).subscribe({
                 val result = it
-                this.getFavoriteDataByLatAndLon(
-                    latitude = result.coord.lat ?: 0.0,
-                    longitude = result.coord.lon ?: 0.0
+                this.getFavoriteDataByName(
+                    name = result.name
                 )
                 _currentData.value = result
             }, {
@@ -117,12 +109,11 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    private fun getFavoriteDataByLatAndLon(latitude: Double, longitude: Double) {
+    private fun getFavoriteDataByName(name: String) {
         addDispose(
             setRepository(
-                iFavoriteRepository.findDataByLatAndLon(
-                    latitude = latitude,
-                    longitude = longitude
+                iFavoriteRepository.findDataByName(
+                    name = name,
                 )
             )
                 .subscribe({
@@ -133,17 +124,17 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    fun saveFavoriteCity(latitude: Double, longitude: Double) {
+    fun saveFavoriteCity(name: String, latitude: Double, longitude: Double) {
         iFavoriteRepository.save(
             favoriteData = FavoriteData(
+                name = name,
                 latitude = latitude,
                 longitude = longitude
             )
         )
 
-        this.getFavoriteDataByLatAndLon(
-            latitude = latitude,
-            longitude = longitude
+        this.getFavoriteDataByName(
+            name = name
         )
     }
 
