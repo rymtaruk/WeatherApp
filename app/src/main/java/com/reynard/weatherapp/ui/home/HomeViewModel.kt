@@ -48,13 +48,13 @@ class HomeViewModel @Inject constructor(
         }
 
     init {
-        getWeatherByLocation()
+        getWeatherByLocation(longitude = 106.8451, latitude = -6.2146)
     }
 
-    private fun getWeatherByLocation() {
+    fun getWeatherByLocation(latitude: Double, longitude: Double) {
         addDispose(
             setRepository(
-                weatherRepository.getWeatherByGeoLocation(longitude = 106.8451, latitude = -6.2146)
+                weatherRepository.getWeatherByGeoLocation(longitude = longitude, latitude = latitude)
             ).compose(this::showLoading)
                 .subscribe({
                     val result = it
@@ -133,23 +133,17 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    fun getAllFavoriteData() {
-        addDispose(
-            setRepository(iFavoriteRepository.getAllData())
-                .subscribe({
-                    _favoriteData.value = it
-                }, {
-                    this.errorHandler(e = it)
-                })
-        )
-    }
-
     fun saveFavoriteCity(latitude: Double, longitude: Double) {
         iFavoriteRepository.save(
             favoriteData = FavoriteData(
                 latitude = latitude,
                 longitude = longitude
             )
+        )
+
+        this.getFavoriteDataByLatAndLon(
+            latitude = latitude,
+            longitude = longitude
         )
     }
 
