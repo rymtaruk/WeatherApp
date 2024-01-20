@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.reynard.core.di.utils.AppViewModelKey
 import com.reynard.core.di.utils.ViewModelFactory
+import com.reynard.weatherapp.ui.favorite.FavoriteViewModel
 import com.reynard.weatherapp.ui.home.HomeViewModel
 import dagger.Binds
 import dagger.Module
@@ -15,6 +16,11 @@ abstract class AppViewModelModule {
     @IntoMap
     @AppViewModelKey(HomeViewModel::class)
     abstract fun bindHomeViewModel(homeViewModel: HomeViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @AppViewModelKey(FavoriteViewModel::class)
+    abstract fun bindFavoriteViewModel(favoriteViewModel: FavoriteViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory?): ViewModelProvider.Factory?

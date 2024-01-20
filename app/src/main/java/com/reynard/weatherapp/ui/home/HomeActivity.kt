@@ -1,9 +1,11 @@
 package com.reynard.weatherapp.ui.home
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.graphics.Typeface
 import android.os.CountDownTimer
 import android.view.View
+import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.reynard.weatherapp.base.AppBaseActivity
@@ -22,6 +24,8 @@ class HomeActivity : AppBaseActivity<ActivityHomeBinding, HomeViewModel>(
 
     override fun onViewCreated() {
         binding.apply {
+            tvDate.text = viewModel.currentDate
+
             rvWeather.apply {
                 layoutManager =
                     LinearLayoutManager(this@HomeActivity, LinearLayoutManager.VERTICAL, false)
@@ -32,6 +36,17 @@ class HomeActivity : AppBaseActivity<ActivityHomeBinding, HomeViewModel>(
             etSearch.addTextChangedListener(onTextChanged = { _, _, _, _ ->
                 startTimer()
             })
+
+            cvFavorites.setOnClickListener {
+                viewModel.getAllFavoriteData()
+            }
+
+            cvAddFav.setOnClickListener {
+                viewModel.saveFavoriteCity(
+                    latitude = viewModel.currentData.value?.coord?.lat ?: 0.0,
+                    longitude = viewModel.currentData.value?.coord?.lon ?: 0.0
+                )
+            }
         }
     }
 
@@ -69,6 +84,18 @@ class HomeActivity : AppBaseActivity<ActivityHomeBinding, HomeViewModel>(
             binding.tvCurrentDegrees.text = "${(it?.main?.temp ?: 0)}°C"
             binding.tvCurrentHum.text = "${(it?.main?.humidity ?: 0)}%"
             binding.tvCurrentWind.text = "${(it?.wind?.speed ?: 0)}m/s"
+        }
+
+        viewModel.favoriteData.observe(this) {
+            Toast.makeText(this@HomeActivity, it.size.toString(), Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.hasAddedFavorite.observe(this) { hasAddedFavorite ->
+            if (hasAddedFavorite) {
+                binding.cvAddFav.setCardBackgroundColor(Color.YELLOW)
+            } else {
+                binding.cvAddFav.setCardBackgroundColor(Color.WHITE)
+            }
         }
     }
 

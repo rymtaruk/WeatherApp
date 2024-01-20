@@ -78,6 +78,14 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:2.46.1"
     //Dependency Injection Lib - End
 
+    //Room Lib - Begin
+    implementation "androidx.room:room-runtime:2.5.2"
+    kapt "androidx.room:room-compiler:2.5.2"
+    implementation "android.arch.persistence.room:rxjava2:1.1.1"
+    kapt "android.arch.persistence.room:compiler:1.1.1"
+    implementation "androidx.room:room-rxjava3:2.5.2"
+    //Room Lib - End
+
     //Chuck - Begin
     implementation 'com.github.chuckerteam.chucker:library:3.5.2'
     //Chuck - End

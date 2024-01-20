@@ -50,7 +50,7 @@
         android:id="@+id/cvSearch"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         app:cardCornerRadius="14dp"
         app:layout_constraintEnd_toEndOf="@id/tvDate"
         app:layout_constraintStart_toStartOf="@id/ivAppIcon"
@@ -59,42 +59,63 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingHorizontal="6dp"
-            android:paddingVertical="10dp"
-            app:layout_constraintEnd_toEndOf="@id/tvDate"
-            app:layout_constraintStart_toStartOf="@id/ivAppIcon"
-            app:layout_constraintTop_toBottomOf="@id/ivAppIcon">
+            android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/ivSearch"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_search"
-                tools:ignore="ContentDescription" />
-
-            <ProgressBar
-                android:id="@+id/loadingSearch"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:visibility="gone"
-                android:indeterminateTint="@color/black"
-                android:layout_gravity="center"/>
-
-            <EditText
-                android:id="@+id/etSearch"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="20dp"
                 android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:fontFamily="@font/montserrat_regular"
-                android:hint="@string/search_by_city"
-                android:textSize="16sp"
-                tools:ignore="Autofill,TextFields" />
+                android:orientation="horizontal"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="10dp"
+                app:layout_constraintEnd_toEndOf="@id/tvDate"
+                app:layout_constraintStart_toStartOf="@id/ivAppIcon"
+                app:layout_constraintTop_toBottomOf="@id/ivAppIcon">
 
+                <ImageView
+                    android:id="@+id/ivSearch"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_search"
+                    tools:ignore="ContentDescription" />
+
+                <ProgressBar
+                    android:id="@+id/loadingSearch"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_gravity="center"
+                    android:indeterminateTint="@color/black"
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/etSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="20dp"
+                    android:background="@android:color/transparent"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="@string/search_by_city"
+                    android:textSize="16sp"
+                    tools:ignore="Autofill,TextFields" />
+            </LinearLayout>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvFavorites"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:layout_marginStart="14dp"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:paddingHorizontal="10dp">
+
+                <ImageView
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_list_fav"
+                    tools:ignore="ContentDescription" />
+            </androidx.cardview.widget.CardView>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -113,12 +134,12 @@
         android:id="@+id/llCurrentCondition"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/ivWeatherIcon"
-        app:layout_constraintStart_toStartOf="parent"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/cvTabDays"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/cvTabDays">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivWeatherIcon">
 
         <TextView
             android:id="@+id/tvCurrentDegrees"
@@ -154,8 +175,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
         app:cardCornerRadius="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -227,6 +248,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintBottom_toTopOf="@id/rvWeather"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -240,7 +262,8 @@
             android:layout_height="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/tvTime"
@@ -248,9 +271,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:fontFamily="@font/montserrat_regular"
+            android:gravity="center"
             android:text="@string/lbl_time"
             android:textSize="10sp"
-            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="@id/ivMenu"
             app:layout_constraintEnd_toStartOf="@id/tvDegrees"
             app:layout_constraintStart_toEndOf="@id/ivMenu"
@@ -306,9 +329,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvWeather"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginHorizontal="24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/cvAddFav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/clTitleMenu"
@@ -316,4 +340,22 @@
         tools:itemCount="3"
         tools:listitem="@layout/item_weather" />
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvAddFav"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="40dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardCornerRadius="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/add_fav"
+            tools:ignore="ContentDescription" />
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
