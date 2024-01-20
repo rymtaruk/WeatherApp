@@ -95,6 +95,14 @@ dependencies {
     implementation 'com.github.chuckerteam.chucker:library:3.5.2'
     //Chuck - End
 
+    //Mockito - Begin
+    testImplementation 'org.mockito:mockito-inline:3.10.0'
+    androidTestImplementation 'org.mockito:mockito-android:3.10.0'
+
+    testImplementation "io.mockk:mockk:1.9.3"
+    testImplementation "com.squareup.okhttp3:okhttp:5.0.0-alpha.2"
+    //Mockito - End
+
     //Internal Module - Begin
     implementation project(path: ':core')
     //Internal Module - End

@@ -6,9 +6,10 @@ package com.reynard.weatherapp.model.data
  * @author BCA Digital
  **/
 data class SysData(
-    val type: Int?,
-    val id: Int?,
-    val country: String?,
-    val sunrise: Long?,
-    val sunset: Long?
+    val type: Int? = 0,
+    val id: Int? = 0,
+    val country: String? = null,
+    val sunrise: Long? = 0,
+    val sunset: Long? = 0,
+    val pod: String? = null
 )
