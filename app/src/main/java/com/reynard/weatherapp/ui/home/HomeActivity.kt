@@ -106,6 +106,7 @@ class HomeActivity : AppBaseActivity<ActivityHomeBinding, HomeViewModel>(
             if (isLoading) {
                 binding.defaultLoading.visibility = View.VISIBLE
             } else {
+                binding.root.isRefreshing = false
                 binding.defaultLoading.visibility = View.GONE
             }
         }
@@ -115,7 +116,6 @@ class HomeActivity : AppBaseActivity<ActivityHomeBinding, HomeViewModel>(
         }
 
         viewModel.dataMap.observe(this) {
-            binding.root.isRefreshing = false
             binding.tvTomorrow.text = it.keys.toList()[1]
             binding.tvTheDayAfterTomorrow.text = it.keys.toList()[2]
 

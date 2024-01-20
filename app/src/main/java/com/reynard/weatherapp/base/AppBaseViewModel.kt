@@ -61,29 +61,29 @@ abstract class AppBaseViewModel : ViewModel() {
         }
     }
 
-    protected open fun errorHandler(e: Throwable?, tag: String? = null): Boolean {
+    protected open fun errorHandler(e: Throwable): Boolean {
         when (e) {
             is ConnectException -> {
-                _defaultError.value = tag
+                _defaultError.value = e.localizedMessage
                 return true
             }
 
             is UnknownHostException -> {
-                _defaultError.value = tag
+                _defaultError.value = e.localizedMessage
                 return true
             }
 
             is HttpException -> {
                 if (e.code() == 401) {
-                    _defaultUnauthorized.value = tag
+                    _defaultUnauthorized.value = e.localizedMessage
                     return true
                 }
-                _defaultError.value = tag
+                _defaultError.value = e.localizedMessage
                 return true
             }
 
             else -> {
-                _defaultError.value = tag
+                _defaultError.value = e.localizedMessage
                 return true
             }
         }
