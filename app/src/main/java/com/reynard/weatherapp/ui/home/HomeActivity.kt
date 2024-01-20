@@ -1,26 +1,146 @@
 package com.reynard.weatherapp.ui.home
 
+import android.annotation.SuppressLint
+import android.graphics.Typeface
+import android.os.CountDownTimer
+import android.view.View
+import androidx.core.widget.addTextChangedListener
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.reynard.weatherapp.base.AppBaseActivity
 import com.reynard.weatherapp.databinding.ActivityHomeBinding
+import com.reynard.weatherapp.utils.IconUtil
 
 class HomeActivity : AppBaseActivity<ActivityHomeBinding, HomeViewModel>(
     ActivityHomeBinding::inflate,
     HomeViewModel::class.java
 ) {
+    private lateinit var weatherAdapter: HomeWeatherAdapter
+    private var countDown: CountDownTimer? = null
     override fun initView() {
-
+        weatherAdapter = HomeWeatherAdapter()
     }
 
     override fun onViewCreated() {
         binding.apply {
-            tvLocation.text = "..."
-            tvDate.text = "10 Jan, 2024"
+            rvWeather.apply {
+                layoutManager =
+                    LinearLayoutManager(this@HomeActivity, LinearLayoutManager.VERTICAL, false)
+                itemAnimator = null
+            }
+            rvWeather.adapter = weatherAdapter
+
+            etSearch.addTextChangedListener(onTextChanged = { _, _, _, _ ->
+                startTimer()
+            })
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onObservableViewModel() {
         viewModel.cityName.observe(this) {
             binding.tvLocation.text = it
         }
+
+        viewModel.dataMap.observe(this) {
+            binding.tvTomorrow.text = it.keys.toList()[1]
+            binding.tvTheDayAfterTomorrow.text = it.keys.toList()[2]
+
+            notifyAdapterWithData(0)
+            setupDailyTab()
+        }
+
+        viewModel.loadingSearch.observe(this) {
+            if (it) {
+                binding.loadingSearch.visibility = View.VISIBLE
+                binding.ivSearch.visibility = View.GONE
+            } else {
+                binding.loadingSearch.visibility = View.GONE
+                binding.ivSearch.visibility = View.VISIBLE
+            }
+        }
+
+        viewModel.currentData.observe(this) {
+            binding.ivWeatherIcon.setImageDrawable(
+                IconUtil.getWeatherIcon(
+                    this@HomeActivity,
+                    it?.weather?.get(0)?.id ?: 0
+                )
+            )
+            binding.tvCurrentDegrees.text = "${(it?.main?.temp ?: 0)}°C"
+            binding.tvCurrentHum.text = "${(it?.main?.humidity ?: 0)}%"
+            binding.tvCurrentWind.text = "${(it?.wind?.speed ?: 0)}m/s"
+        }
+    }
+
+    private fun setupDailyTab() {
+        binding.apply {
+            tvToday.setOnClickListener {
+                vwSelected.animate().x(0f)
+                    .withEndAction {
+                        tvToday.setTypeface(tvToday.typeface, Typeface.NORMAL)
+                        tvTomorrow.setTypeface(tvTomorrow.typeface, Typeface.BOLD)
+                        tvTheDayAfterTomorrow.setTypeface(
+                            tvTheDayAfterTomorrow.typeface,
+                            Typeface.NORMAL
+                        )
+                        notifyAdapterWithData(0)
+                    }
+                    .duration = 200
+            }
+
+            tvTomorrow.setOnClickListener {
+                vwSelected.animate().x(tvTomorrow.width.toFloat())
+                    .withEndAction {
+                        tvToday.setTypeface(tvToday.typeface, Typeface.NORMAL)
+                        tvTomorrow.setTypeface(tvTomorrow.typeface, Typeface.BOLD)
+                        tvTheDayAfterTomorrow.setTypeface(
+                            tvTheDayAfterTomorrow.typeface,
+                            Typeface.NORMAL
+                        )
+                        notifyAdapterWithData(1)
+                    }
+                    .duration = 200
+            }
+
+            tvTheDayAfterTomorrow.setOnClickListener {
+                vwSelected.animate().x(tvTomorrow.width.toFloat() * 2)
+                    .withEndAction {
+                        tvToday.setTypeface(tvToday.typeface, Typeface.NORMAL)
+                        tvTomorrow.setTypeface(tvTomorrow.typeface, Typeface.NORMAL)
+                        tvTheDayAfterTomorrow.setTypeface(
+                            tvTheDayAfterTomorrow.typeface,
+                            Typeface.BOLD
+                        )
+                        notifyAdapterWithData(2)
+                    }
+                    .duration = 200
+            }
+        }
+    }
+
+    private fun notifyAdapterWithData(index: Int) {
+        val data = viewModel.dataMap.value!!
+        val listData = data[data.keys.toList()[index]]!!
+        weatherAdapter.items = listData
+        weatherAdapter.notifyItemRangeChanged(0, listData.size)
+    }
+
+    private fun startTimer() {
+        cancelTimer()
+        countDown = object : CountDownTimer(500, 500) {
+            override fun onTick(p0: Long) {
+                return
+            }
+
+            override fun onFinish() {
+                viewModel.getWeatherByCityName(binding.etSearch.text.toString())
+            }
+        }
+        countDown!!.start()
+    }
+
+    private fun cancelTimer() {
+        if (countDown != null)
+            countDown!!.cancel()
     }
 }

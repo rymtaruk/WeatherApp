@@ -1,6 +1,7 @@
 package com.reynard.weatherapp.api.repositories
 
 import com.reynard.weatherapp.api.WeatherApi
+import com.reynard.weatherapp.model.response.CurrentWeatherResponse
 import com.reynard.weatherapp.model.response.WeatherResponse
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
@@ -17,5 +18,9 @@ class WeatherRepository @Inject constructor(private val api: WeatherApi) {
 
     fun getWeatherByGeoLocation(latitude: Double, longitude: Double): Single<WeatherResponse> {
         return api.getWeather(latitude = latitude, longitude = longitude)
+    }
+
+    fun getCurrentWeatherByLocation(latitude: Double, longitude: Double): Single<CurrentWeatherResponse> {
+        return api.getCurrentWeather(latitude = latitude, longitude = longitude)
     }
 }

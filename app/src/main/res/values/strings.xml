@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">WeatherApp</string>
     <string name="search_by_city">Search by city</string>
+    <string name="lbl_today">Today</string>
+    <string name="lbl_time">Time</string>
+    <string name="lbl_degrees">Degrees</string>
+    <string name="lbl_temp">Temp</string>
+    <string name="lbl_humidity">Humidity</string>
+    <string name="lbl_wind">Wind</string>
 </resources>
