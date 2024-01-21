@@ -44,6 +44,8 @@ class FavoriteActivity : AppBaseActivity<ActivityFavoriteBinding, FavoriteViewMo
     }
 
     override fun onObservableViewModel() {
+        viewModel.getAllFavoriteData()
+
         viewModel.loading.observe(this) { isLoading ->
             if (isLoading) {
                 binding.defaultLoading.visibility = View.VISIBLE

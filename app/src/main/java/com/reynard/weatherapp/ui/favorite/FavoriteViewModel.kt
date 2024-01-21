@@ -24,11 +24,7 @@ class FavoriteViewModel @Inject constructor(
 
     private val items = ArrayList<CurrentWeatherResponse>()
 
-    init {
-        getAllFavoriteData()
-    }
-
-    private fun getAllFavoriteData() {
+    fun getAllFavoriteData() {
         addDispose(
             setRepository(iFavoriteRepository.getAllData())
                 .compose(this::showLoading)
