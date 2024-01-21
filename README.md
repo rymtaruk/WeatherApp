@@ -7,7 +7,7 @@ This is Weather application
 
 2. Device orientation only support portrait.
 
-3. UI testing, using dagger
+3. Using local database (room)
 
 ### Architecture Details
 
