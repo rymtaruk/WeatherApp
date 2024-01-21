@@ -80,10 +80,13 @@ dependencies {
     //Dependency Injection Lib - End
 
     //Room Lib - Begin
+    //noinspection GradleDependency
     implementation "androidx.room:room-runtime:2.5.2"
+    //noinspection KaptUsageInsteadOfKsp,GradleDependency
     kapt "androidx.room:room-compiler:2.5.2"
     implementation "android.arch.persistence.room:rxjava2:1.1.1"
     kapt "android.arch.persistence.room:compiler:1.1.1"
+    //noinspection GradleDependency
     implementation "androidx.room:room-rxjava3:2.5.2"
     //Room Lib - End
 
