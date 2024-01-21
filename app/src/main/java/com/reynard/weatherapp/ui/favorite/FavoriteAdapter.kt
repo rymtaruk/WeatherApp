@@ -9,7 +9,7 @@ import com.reynard.weatherapp.utils.IconUtil
 
 class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
     var items: List<CurrentWeatherResponse?>? = null
-    var onClickItem: ((Double, Double) -> Unit)? = null
+    var onClickItem: ((String) -> Unit)? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
             ItemFavoriteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -38,7 +38,7 @@ class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
 
         holder.view.root.setOnClickListener {
             onClickItem?.let {
-                onclick -> onclick(data.coord.lat!!, data.coord.lon!!)
+                onclick -> onclick(data.name)
             }
         }
     }

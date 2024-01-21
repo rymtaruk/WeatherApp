@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.reynard.weatherapp.base.AppBaseActivity
 import com.reynard.weatherapp.databinding.ActivityFavoriteBinding
 
-const val LATITUDE = "LATITUDE"
-const val LONGITUDE = "LONGITUDE"
+
+const val CITY_NAME = "CITY_NAME"
 
 class FavoriteActivity : AppBaseActivity<ActivityFavoriteBinding, FavoriteViewModel>(
     ActivityFavoriteBinding::inflate,
@@ -30,10 +30,9 @@ class FavoriteActivity : AppBaseActivity<ActivityFavoriteBinding, FavoriteViewMo
                 itemAnimator = null
             }
             rvFavorite.adapter = favoriteAdapter
-            favoriteAdapter.onClickItem = { latitude, longitude ->
+            favoriteAdapter.onClickItem = { cityName ->
                 val intent = Intent()
-                intent.putExtra(LATITUDE, latitude)
-                intent.putExtra(LONGITUDE, longitude)
+                intent.putExtra(CITY_NAME, cityName)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
             }

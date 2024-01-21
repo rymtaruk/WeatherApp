@@ -167,18 +167,29 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="center"
-                tools:text="@string/lbl_temp"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:text="@string/dot"  />
+
+            <View
+                android:layout_width="0.6dp"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="8dp"
+                android:background="?attr/colorOnPrimary" />
 
             <TextView
                 android:id="@+id/tvCurrentHum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="12dp"
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="center"
-                tools:text="@string/lbl_temp"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:text="@string/dot" />
+
+            <View
+                android:layout_width="0.6dp"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="8dp"
+                android:background="?attr/colorOnPrimary" />
 
             <TextView
                 android:id="@+id/tvCurrentWind"
@@ -186,19 +197,25 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="center"
-                tools:text="@string/lbl_temp"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:text="@string/dot"  />
+
+            <View
+                android:layout_width="7dp"
+                android:layout_height="0.6dp"
+                android:layout_marginHorizontal="6dp"
+                android:background="?attr/colorOnPrimary" />
 
             <ImageButton
                 android:id="@+id/btnRefresh"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginStart="20dp"
                 android:background="@android:color/transparent"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:gravity="center"
                 android:scaleType="centerInside"
                 android:src="@drawable/baseline_refresh_24"
+                app:tint="?attr/colorAccent"
                 tools:ignore="ContentDescription" />
         </LinearLayout>
 

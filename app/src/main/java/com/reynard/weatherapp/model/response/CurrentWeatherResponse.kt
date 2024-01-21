@@ -24,6 +24,6 @@ data class CurrentWeatherResponse(
     val sys: SysData,
     val timezone: Int,
     val id: Int,
-    val name: String,
+    var name: String,
     val cod: Int
 )

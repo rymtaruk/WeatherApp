@@ -6,6 +6,7 @@ import com.reynard.weatherapp.api.repositories.WeatherRepository
 import com.reynard.weatherapp.base.AppBaseViewModel
 import com.reynard.weatherapp.database.model.FavoriteData
 import com.reynard.weatherapp.database.repositories.IFavoriteRepository
+import com.reynard.weatherapp.model.data.CityData
 import com.reynard.weatherapp.model.data.FourCastData
 import com.reynard.weatherapp.model.response.CurrentWeatherResponse
 import com.reynard.weatherapp.model.response.WeatherResponse
@@ -23,16 +24,16 @@ class HomeViewModel @Inject constructor(
     private val weatherRepository: WeatherRepository,
     private val iFavoriteRepository: IFavoriteRepository
 ) : AppBaseViewModel() {
-    private val _cityName = MutableLiveData<String>()
     private val _loadingSearch = MutableLiveData<Boolean>()
     private val _dataMap = MutableLiveData<MutableMap<String, MutableList<FourCastData>>>()
     private val _currentData = MutableLiveData<CurrentWeatherResponse>()
+    private val _currentCity = MutableLiveData<CityData>()
     private val _favoriteData = MutableLiveData<List<FavoriteData>>()
     private val _hasAddedFavorite = MutableLiveData<Boolean>()
 
-    val cityName: LiveData<String> get() = _cityName
     val dataMap: LiveData<MutableMap<String, MutableList<FourCastData>>> get() = _dataMap
     val currentData: LiveData<CurrentWeatherResponse> get() = _currentData
+    val currentCity: LiveData<CityData> get() = _currentCity
     val loadingSearch: LiveData<Boolean> get() = _loadingSearch
     val favoriteData: LiveData<List<FavoriteData>> get() = _favoriteData
     val hasAddedFavorite: LiveData<Boolean> get() = _hasAddedFavorite
@@ -40,25 +41,23 @@ class HomeViewModel @Inject constructor(
     var selectedLatitude: Double = 0.0
     var selectedLongitude: Double = 0.0
 
-    fun getWeatherByLocation(latitude: Double = selectedLatitude, longitude: Double = selectedLongitude) {
+    fun getWeatherByLocation(
+        latitude: Double = selectedLatitude,
+        longitude: Double = selectedLongitude
+    ) {
         selectedLatitude = latitude
         selectedLongitude = longitude
         addDispose(
             setRepository(
-                weatherRepository.getWeatherByGeoLocation(longitude = longitude, latitude = latitude)
+                weatherRepository.getWeatherByGeoLocation(
+                    longitude = longitude,
+                    latitude = latitude
+                )
             ).compose(this::showLoading)
-                .subscribe({
-                    val result = it
-                    this.getCurrentWeather(
-                        latitude = result.city?.coord?.lat ?: 0.0,
-                        longitude = result.city?.coord?.lon ?: 0.0
-                    )
-                    mapDataByDate(result)
-
-                    _cityName.value = result.city?.name ?: ""
-                }, {
-                    this.errorHandler(e = it)
-                })
+                .subscribe(
+                    this::handleWeatherResponse,
+                    this::errorHandler
+                )
         )
     }
 
@@ -73,21 +72,23 @@ class HomeViewModel @Inject constructor(
                 .doAfterTerminate {
                     _loadingSearch.value = false
                 }
-                .subscribe({
-                    val result = it
-                    selectedLatitude = result?.city?.coord?.lat ?: 0.0
-                    selectedLongitude = result?.city?.coord?.lon ?: 0.0
-                    this.getCurrentWeather(
-                        latitude = selectedLatitude,
-                        longitude = selectedLongitude
-                    )
-                    this.mapDataByDate(it)
-
-                    _cityName.value = it.city?.name ?: ""
-                }, {
-                    this.errorHandler(e = it)
-                })
+                .subscribe(
+                    this::handleWeatherResponse,
+                    this::errorHandler
+                )
         )
+    }
+
+    private fun handleWeatherResponse(weatherResponse: WeatherResponse) {
+        selectedLatitude = weatherResponse.city?.coord?.lat ?: 0.0
+        selectedLongitude = weatherResponse.city?.coord?.lon ?: 0.0
+        this.getCurrentWeather(
+            latitude = selectedLatitude,
+            longitude = selectedLongitude
+        )
+        this.mapDataByDate(weatherResponse)
+
+        _currentCity.value = weatherResponse.city
     }
 
     private fun getCurrentWeather(latitude: Double, longitude: Double) {
@@ -99,9 +100,7 @@ class HomeViewModel @Inject constructor(
                 )
             ).subscribe({
                 val result = it
-                this.getFavoriteDataByName(
-                    name = result.name
-                )
+                this.getFavoriteDataByName()
                 _currentData.value = result
             }, {
                 this.errorHandler(e = it)
@@ -109,11 +108,11 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    private fun getFavoriteDataByName(name: String) {
+    private fun getFavoriteDataByName() {
         addDispose(
             setRepository(
                 iFavoriteRepository.findDataByName(
-                    name = name,
+                    name = currentCity.value?.name ?: "",
                 )
             )
                 .subscribe({
@@ -124,18 +123,17 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    fun saveFavoriteCity(name: String, latitude: Double, longitude: Double) {
+    fun saveFavoriteCity() {
         iFavoriteRepository.save(
             favoriteData = FavoriteData(
-                name = name,
-                latitude = latitude,
-                longitude = longitude
+                id = currentCity.value?.id ?: 0,
+                name = currentCity.value?.name ?: "",
+                latitude = currentCity.value?.coord?.lat ?: 0.0,
+                longitude = currentCity.value?.coord?.lon ?: 0.0
             )
         )
 
-        this.getFavoriteDataByName(
-            name = name
-        )
+        this.getFavoriteDataByName()
     }
 
     private fun mapDataByDate(weatherResponse: WeatherResponse) {

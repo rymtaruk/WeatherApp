@@ -23,6 +23,7 @@ class FavoriteViewModel @Inject constructor(
     val favoriteData: LiveData<List<CurrentWeatherResponse>> get() = _favoriteData
 
     private val items = ArrayList<CurrentWeatherResponse>()
+
     init {
         getAllFavoriteData()
     }
@@ -31,33 +32,33 @@ class FavoriteViewModel @Inject constructor(
         addDispose(
             setRepository(iFavoriteRepository.getAllData())
                 .compose(this::showLoading)
-                .subscribe(this::getCurrentData) {
-                    this.errorHandler(e = it)
-                }
+                .subscribe(this::getCurrentData, this::errorHandler)
         )
     }
 
     private fun getCurrentData(favoritesData: List<FavoriteData>) {
         for (fav in favoritesData) {
-            getCurrentWeather(latitude = fav.latitude, longitude = fav.longitude)
+            getCurrentWeather(fav)
         }
     }
 
-    private fun getCurrentWeather(latitude: Double, longitude: Double) {
+    private fun getCurrentWeather(favData: FavoriteData) {
         addDispose(
             setRepository(
                 weatherRepository.getCurrentWeatherByLocation(
-                    latitude = latitude,
-                    longitude = longitude
+                    latitude = favData.latitude,
+                    longitude = favData.longitude
                 )
             ).compose(this::showLoading)
-                .subscribe(this::addToListFavorite) {
-                this.errorHandler(e = it)
-            }
+                .subscribe(
+                    { this.addToListFavorite(data = it, favData = favData) },
+                    this::errorHandler
+                )
         )
     }
 
-    private fun addToListFavorite(data: CurrentWeatherResponse) {
+    private fun addToListFavorite(data: CurrentWeatherResponse, favData: FavoriteData) {
+        data.name = favData.name
         items.add(data)
 
         _favoriteData.value = items

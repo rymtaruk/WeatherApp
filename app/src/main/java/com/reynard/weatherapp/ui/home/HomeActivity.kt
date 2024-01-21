@@ -3,12 +3,14 @@ package com.reynard.weatherapp.ui.home
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.CountDownTimer
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
@@ -18,12 +20,12 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.reynard.weatherapp.base.AppBaseActivity
 import com.reynard.weatherapp.databinding.ActivityHomeBinding
+import com.reynard.weatherapp.ui.favorite.CITY_NAME
 import com.reynard.weatherapp.ui.favorite.FavoriteActivity
-import com.reynard.weatherapp.ui.favorite.LATITUDE
-import com.reynard.weatherapp.ui.favorite.LONGITUDE
 import com.reynard.weatherapp.utils.IconUtil
 
 private const val LOCATION_PERMISSION_CODE = 101
+
 class HomeActivity : AppBaseActivity<ActivityHomeBinding, HomeViewModel>(
     ActivityHomeBinding::inflate, HomeViewModel::class.java
 ) {
@@ -35,10 +37,11 @@ class HomeActivity : AppBaseActivity<ActivityHomeBinding, HomeViewModel>(
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val extras = result.data?.extras!!
-                val latitude = extras.getDouble(LATITUDE)
-                val longitude = extras.getDouble(LONGITUDE)
+                val cityName = extras.getString(CITY_NAME) ?: ""
 
-                viewModel.getWeatherByLocation(longitude = longitude, latitude = latitude)
+                binding.etSearch.text.clear()
+                binding.etSearch.clearFocus()
+                viewModel.getWeatherByCityName(cityName = cityName)
             }
         }
 
@@ -84,18 +87,14 @@ class HomeActivity : AppBaseActivity<ActivityHomeBinding, HomeViewModel>(
                 if (viewModel.hasAddedFavorite.value == true) {
                     Toast.makeText(
                         this@HomeActivity,
-                        "Opps! City has been saved!",
+                        "Opps! City is already in favorites",
                         Toast.LENGTH_SHORT
                     ).show()
                     return@setOnClickListener
                 }
 
-                viewModel.saveFavoriteCity(
-                    name = viewModel.currentData.value?.name ?: "",
-                    latitude = viewModel.currentData.value?.coord?.lat ?: 0.0,
-                    longitude = viewModel.currentData.value?.coord?.lon ?: 0.0
-                )
-                Toast.makeText(this@HomeActivity, "Yay! City saved", Toast.LENGTH_SHORT).show()
+                viewModel.saveFavoriteCity()
+                Toast.makeText(this@HomeActivity, "Yay! City is saved", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -111,8 +110,8 @@ class HomeActivity : AppBaseActivity<ActivityHomeBinding, HomeViewModel>(
             }
         }
 
-        viewModel.cityName.observe(this) {
-            binding.tvLocation.text = it
+        viewModel.currentCity.observe(this) {
+            binding.tvLocation.text = it.name
         }
 
         viewModel.dataMap.observe(this) {
@@ -128,6 +127,7 @@ class HomeActivity : AppBaseActivity<ActivityHomeBinding, HomeViewModel>(
                 binding.loadingSearch.visibility = View.VISIBLE
                 binding.ivSearch.visibility = View.GONE
             } else {
+                hideKeyboard()
                 binding.loadingSearch.visibility = View.GONE
                 binding.ivSearch.visibility = View.VISIBLE
             }
@@ -209,7 +209,9 @@ class HomeActivity : AppBaseActivity<ActivityHomeBinding, HomeViewModel>(
             }
 
             override fun onFinish() {
-                viewModel.getWeatherByCityName(binding.etSearch.text.toString())
+                if (binding.etSearch.text.toString().isNotEmpty()) {
+                    viewModel.getWeatherByCityName(binding.etSearch.text.toString())
+                }
             }
         }
         countDown!!.start()
@@ -262,13 +264,13 @@ class HomeActivity : AppBaseActivity<ActivityHomeBinding, HomeViewModel>(
         }
     }
 
-    private fun usingDefaultLocation(){
+    private fun usingDefaultLocation() {
         viewModel.selectedLatitude = -6.2146
         viewModel.selectedLongitude = 106.8451
         viewModel.getWeatherByLocation()
     }
 
-    private fun getCurrentLocation(){
+    private fun getCurrentLocation() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this@HomeActivity)
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -291,5 +293,11 @@ class HomeActivity : AppBaseActivity<ActivityHomeBinding, HomeViewModel>(
                 usingDefaultLocation()
             }
         }
+    }
+
+    private fun hideKeyboard() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
+        binding.etSearch.clearFocus()
     }
 }
