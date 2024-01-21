@@ -42,11 +42,11 @@ This is Weather application
 
 5. [Mockito](https://github.com/mockito/mockito) for Unit Test
 
-6. [Chuck](https://github.com/ChuckerTeam/chucker) for debug mode logging interceptor Http
+6. [Chuck](https://github.com/ChuckerTeam/chucker) for debug mode logging interceptor Http (activate notif manually for using chucker)
 
 7. [Gson](https://github.com/google/gson) for converting object to json 
 
-8. [Room](https://developer.android.com/jetpack/androidx/releases/room?hl=id) for save favorite data (city)
+8. [Room](https://developer.android.com/jetpack/androidx/releases/room?hl=id) for save favorite data (city) to database
 
 ### Test cases
 * Unit Test is implemented with Mockito
